@@ -1,0 +1,13 @@
+{
+  "name": "my_project_1",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "webApp",
+    "shared/build/dist/js/developmentLibrary"
+  ],
+  "scripts": {
+    "build": "cd webApp && bun run build",
+    "start": "cd webApp && bun run start"
+ }
+}

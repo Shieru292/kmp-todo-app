@@ -34,4 +34,7 @@ dependencies {
 
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
+
+    implementation(libs.arrow.core)
+    implementation(libs.arrow.fx.coroutines)
 }

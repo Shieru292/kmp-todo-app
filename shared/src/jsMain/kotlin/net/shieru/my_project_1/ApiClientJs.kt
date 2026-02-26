@@ -7,10 +7,6 @@ import kotlinx.coroutines.promise
 import kotlin.js.Promise
 import kotlin.js.collections.JsReadonlyArray
 
-@JsExport
-fun fetchHello(): Promise<String> = GlobalScope.promise {
-    fetchHelloSuspend()
-}
 
 @JsExport
 fun fetchAllToDo(): Promise<JsReadonlyArray<ToDo>> = GlobalScope.promise {
@@ -32,10 +28,17 @@ data class JsValidationResult(val isValid: Boolean, val errorMessage: String? = 
 
 @JsExport
 fun validateToDoJs(todo: ToDo): JsValidationResult {
-    return when (val validationResult = validateToDo(todo)) {
-        is EmptyContentError -> JsValidationResult(false, "内容を入力してください")
-        is NegativeIdError -> JsValidationResult(false, "IDは0以上の整数でなければなりません")
-        is NameTooLongError -> JsValidationResult(false, "名前が長すぎます。${validationResult.maxLength}文字以下にしてください。")
-        is Valid -> JsValidationResult(true)
-    }
+    return validateToDo(todo).fold(
+        ifLeft = {
+            when(it) {
+                EmptyContentError -> JsValidationResult(false, "内容を入力してください。")
+                IdAlreadyExistsError -> JsValidationResult(false, "既に存在するIDです。")
+                is NameTooLongError -> JsValidationResult(false, "内容は${it.maxLength}文字以内で入力してください。")
+                NegativeIdError -> JsValidationResult(false, "IDは正の数値で入力してください。")
+            }
+        },
+        ifRight = {
+            JsValidationResult(true)
+        }
+    )
 }

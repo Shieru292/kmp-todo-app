@@ -24,6 +24,8 @@ kotlin {
             implementation(libs.ktor.serializationKotlinxJson)
             implementation(libs.ktor.clientSerialization)
             implementation(libs.ktor.clientContentNegotiation)
+            implementation(libs.arrow.core)
+            implementation(libs.arrow.fx.coroutines)
         }
 
         jsMain.dependencies {
